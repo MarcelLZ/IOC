@@ -1,44 +1,34 @@
 <?php
 /**
+ * Criando um interface de acesso ao Pimple (Teste de Conhecimento)
+ *
  * Autor: Marcel Zanluca <marcel.zanluca@gmail.com>
  * Data: 23/03/2015
  */
 
 namespace IOC;
 
-use IOC\Excecao\ServicoExcecao;
-
 class Container implements IContainer
 {
-    private static $instanciaDic = null;
-    private $listaServicos = array();
+    private $container;
 
-    public static function obterInstacia()
+    public function __construct()
     {
-        if (null === self::$instanciaDic) {
-            self::$instanciaDic = new Container();
-        }
-
-        return self::$instanciaDic;
+        $this->container = new \Pimple\Container();
     }
 
-    public static function destruir()
+    public function registrar($nomeServico, $instancia)
     {
-        self::$instanciaDic = null;
+        $this->container[$nomeServico] = $instancia;
     }
 
-    public function registrar($nomeServico, $servico)
+    public function registrarFactory($nomeServico, $instancia)
     {
-        $this->listaServicos[$nomeServico] = $servico();
+        $this->container[$nomeServico] = $this->container->factory($instancia);
     }
 
     public function obter($nomeServico)
     {
-        try {
-            return $this->listaServicos[$nomeServico];
-        }
-        catch (\Exception $e) {
-            throw new ServicoExcecao("Serviço {$nomeServico} não registrado.");
-        }
+        return $this->container[$nomeServico];
     }
 }

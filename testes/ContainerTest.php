@@ -11,53 +11,47 @@ class ContainerTest extends PHPUnit_Framework_TestCase
 
     public function setup()
     {
-        $this->container = IOC\Container::obterInstacia();
-    }
-
-    public function tearDown()
-    {
-        IOC\Container::destruir();
-    }
-
-    public function test_deve_retornar_sempre_a_mesma_instancia()
-    {
-        $novaInstancia = IOC\Container::obterInstacia();
-
-        $this->assertInstanceOf('\IOC\Container', $novaInstancia);
-        $this->assertEquals($this->container, $novaInstancia);
+        $this->container = new IOC\Container();
     }
 
     public function test_deve_registrar_um_novo_servico()
     {
-        $nomeServico = 'servicoTeste';
-        $this->dadoQueUmServicoFoiRegistrado($nomeServico);
-
-        $totalServicosRegistrados = count(PHPUnit_Framework_Assert::readAttribute($this->container, 'listaServicos'));
-        $this->assertEquals(1, $totalServicosRegistrados);
-    }
-
-    public function test_deve_retornar_um_servico_ja_registrado()
-    {
-        $nomeServico = 'servicoTeste';
-        $this->dadoQueUmServicoFoiRegistrado($nomeServico);
+        $nomeServico = 'novoServico';
+        $this->dadoQueUmServicoSingletonFoiRegistrado($nomeServico);
 
         $servico = $this->container->obter($nomeServico);
 
-        $this->assertInstanceOf('stdClass', $servico);
+        $this->assertNotEmpty($servico);
     }
 
-    /**
-     * @expectedException        \IOC\Excecao\ServicoExcecao
-     */
-    public function test_deve_lancar_uma_excessao_se_o_servico_solicitado_nao_existir()
+    public function test_deve_sempre_retornar_a_mesma_informacao_no_servico_singleton()
     {
-        $this->dadoQueUmServicoFoiRegistrado('servicoQueExistente');
+        $nomeServico = 'novoServico';
+        $this->dadoQueUmServicoSingletonFoiRegistrado($nomeServico);
 
-        $this->container->obter('servicoQueNaoExistente');
+        $servico1 = $this->container->obter($nomeServico);
+        $servico2 = $this->container->obter($nomeServico);
+
+        $this->assertEquals($servico1, $servico2);
     }
 
-    private function dadoQueUmServicoFoiRegistrado($nomeServico)
+    public function test_deve_sempre_retornar_uma_informacao_diferente_no_servico_factory()
     {
-        $this->container->registrar($nomeServico, function () { return new stdClass(); });
+        $nomeServico = 'servicoFactory';
+        $this->container->registrarFactory($nomeServico, function () {
+            return rand();
+        });
+
+        $servico1 = $this->container->obter($nomeServico);
+        $servico2 = $this->container->obter($nomeServico);
+
+        $this->assertNotEquals($servico1, $servico2);
+    }
+
+    private function dadoQueUmServicoSingletonFoiRegistrado($nomeServico)
+    {
+        $this->container->registrar($nomeServico, function () {
+            return rand();
+        });
     }
 }

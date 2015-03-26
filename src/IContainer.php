@@ -1,16 +1,34 @@
 <?php
 /**
  * Autor: Marcel Zanluca <marcel.zanluca@gmail.com>
- * Data: 24/03/2015
+ * Data: 25/03/2015
  */
 
 namespace IOC;
 
-interface IContainer 
+interface IContainer
 {
-    public static function obterInstacia();
-    public static function destruir();
+    /**
+     * Este método registra um serviço e este é automaticamente singleton
+     *
+     * @param $nomeServico string
+     * @param $instancia anonymous function
+     */
+    public function registrar($nomeServico, $instancia);
 
-    public function registrar($nomeServico, $servico);
+    /**
+     * Este método registra um serviço e este é automaticamente recriado sempre que for recuperado
+     *
+     * @param $nomeServico
+     * @param $instancia
+     */
+    public function registrarFactory($nomeServico, $instancia);
+
+    /**
+     * Este método é usado para obter um serviço já registrado
+     *
+     * @param $nomeServico string
+     * @return mixed
+     */
     public function obter($nomeServico);
 }
