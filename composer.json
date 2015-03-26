@@ -1,5 +1,5 @@
 {
-    "name": "MarcelLuiz/ioc",
+    "name": "marcel-luiz/ioc",
     "description": "Implementando um container com base no Pimple.",
     "require": {
         "pimple/pimple": "~3.0@dev"
