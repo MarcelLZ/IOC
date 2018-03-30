@@ -1,7 +1,7 @@
 <?php
 /**
- * Autor: Marcel Zanluca <marcel.zanluca@gmail.com>
- * Data: 25/03/2015
+ * Author: Marcel Zanluca <marcel.zanluca@gmail.com>
+ * Date: 2015-03-25
  */
 
 namespace IOC;
@@ -9,26 +9,26 @@ namespace IOC;
 interface IContainer
 {
     /**
-     * Este método registra um serviço e este é automaticamente singleton
+     * It register a singleton service
      *
-     * @param $nomeServico string
-     * @param $instancia anonymous function
+     * @param $serviceName string
+     * @param $instance anonymous function
      */
-    public function registrar($nomeServico, $instancia);
+    public function register($nomeServico, $instancia);
 
     /**
-     * Este método registra um serviço e este é automaticamente recriado sempre que for recuperado
+     * It register a factory to return always a new service
      *
-     * @param $nomeServico
-     * @param $instancia
+     * @param $serviceName string
+     * @param $instance anonymous function
      */
-    public function registrarFactory($nomeServico, $instancia);
+    public function registerFactory($nomeServico, $instancia);
 
     /**
-     * Este método é usado para obter um serviço já registrado
+     * Use it to get a registered service
      *
-     * @param $nomeServico string
+     * @param $serviceName string
      * @return mixed
      */
-    public function obter($nomeServico);
+    public function get($nomeServico);
 }

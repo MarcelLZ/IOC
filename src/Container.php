@@ -1,34 +1,58 @@
 <?php
 /**
- * Criando um interface de acesso ao Pimple (Teste de Conhecimento)
+ * Interface to access Pimple
  *
- * Autor: Marcel Zanluca <marcel.zanluca@gmail.com>
- * Data: 23/03/2015
+ * Author: Marcel Zanluca <marcel.zanluca@gmail.com>
+ * Date: 2015-03-23
  */
 
 namespace IOC;
 
 class Container implements IContainer
 {
-    private $container;
+    /**
+     * @var $container \Pimple\Container
+     */
+    private $_container;
 
+    /**
+     * Wrapper for PimpleContainer
+     */
     public function __construct()
     {
-        $this->container = new \Pimple\Container();
+        $this->_container = new \Pimple\Container();
     }
 
-    public function registrar($nomeServico, $instancia)
+    /**
+     * Register a service
+     *
+     * @param $serviceName string
+     * @param $instance anonymous function
+     */
+    public function register($serviceName, $instance)
     {
-        $this->container[$nomeServico] = $instancia;
+        $this->_container[$serviceName] = $instance;
     }
 
-    public function registrarFactory($nomeServico, $instancia)
+    /**
+     * Register a factory to return a new service instance every time
+     *
+     * @param $serviceName string
+     * @param $instance anonymous function
+     */
+    public function registerFactory($serviceName, $instance)
     {
-        $this->container[$nomeServico] = $this->container->factory($instancia);
+        $this->_container[$serviceName] = $this->_container->factory($instance);
     }
 
-    public function obter($nomeServico)
+    /**
+     * Return the service based on serviceName
+     *
+     * @param $serviceName string
+     * @return mixed
+     */
+    public function get($serviceName)
     {
-        return $this->container[$nomeServico];
+        return $this->_container[$serviceName];
     }
 }
