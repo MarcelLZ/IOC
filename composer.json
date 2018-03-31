@@ -14,8 +14,8 @@
         }
     ],
     "autoload": {
-        "psr-4": {
-          "IOC\\": "src/"
-        }
+        "classmap": [
+            "src/"
+        ]
     }
 }

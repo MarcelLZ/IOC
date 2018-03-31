@@ -4,7 +4,7 @@
  * Data: 24/03/2015
  */
 
-namespace IOC\Excecao;
+namespace IOC\Exception;
 
 class ServicoExcecao extends \Exception
 {

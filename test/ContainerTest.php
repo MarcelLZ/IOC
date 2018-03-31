@@ -6,6 +6,7 @@
  */
 
 use PHPUnit\Framework\TestCase;
+use IOC\Container;
 
 final class ContainerTest extends TestCase
 {
@@ -13,7 +14,7 @@ final class ContainerTest extends TestCase
 
   public function setup()
   {
-      $this->_container = new IOC\Container();
+      $this->_container = new Container();
   }
 
   public function testShouldRegisterANewService()

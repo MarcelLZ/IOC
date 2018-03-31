@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Interface to access Pimple
  *
