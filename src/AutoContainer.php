@@ -174,20 +174,12 @@ class AutoContainer
 
   /**
    * Verify if it already is an object
+   *
+   * @param $service mixed
+   * @return bool
    */
-  private function isAnInstance($service)
+  private function isAnInstance($service) : bool
   {
-    $result = \is_object($service);
-    return $result;
-  }
-
-  /**
-   * It'll be removed
-   */
-  private function pre($content)
-  {
-    echo "=== DUMP === \r\n";
-      var_dump($content);
-    echo "=== /DUMP === \r\n";
+    return \is_object($service);
   }
 }

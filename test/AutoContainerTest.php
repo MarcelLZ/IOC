@@ -91,5 +91,4 @@ final class AutoContainerTest extends TestCase
 
     $this->assertInternalType('int', $serviceInstance->getConcreteServiceNumber());
   }
-
 }
