@@ -40,15 +40,22 @@ class AutoContainer
   {
     $this->validateInterface($interface);
     $this->validadeConcreteType($concreteType, $interface);
+
+    $reflectionClass = new \ReflectionClass($concreteType);
+    $instance = $reflectionClass->newInstance();
+
+    // $this->pre($instance);
+
+    $this->_container[$interface] = $instance;
   }
 
   /**
    * It gets a registered service
    *
-   * @param $serviceName string
+   * @param $serviceName interface
    * @return mixed
    */
-  public function resolve(string $serviceName)
+  public function resolve($serviceName)
   {
     try {
       return $this->_container[$serviceName];

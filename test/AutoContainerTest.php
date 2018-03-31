@@ -56,13 +56,25 @@ final class AutoContainerTest extends TestCase
     $this->_container->resolve('FakeService');
   }
 
-  // public function testShouldRegisterAService()
-  // {
-  //   $this->_container->register('IConcreteService');
-  //   $serviceInstance = $this->_container->resolve('IConcreteService');
+  public function testShouldRegisterAService()
+  {
+    $this->_container->register('IConcreteService', 'ConcreteService');
+    $serviceInstance = $this->_container->resolve('IConcreteService');
 
-  //   $this->assertNotEmpty($serviceInstance);
-  // }
+    $this->assertNotEmpty($serviceInstance);
+  }
+
+  public function testShouldServiceReturnTheSameInformation()
+  {
+    $this->_container->register('IConcreteService', 'ConcreteService');
+
+    $numberOne = $this->_container->resolve('IConcreteService');
+    $numberTwo = $this->_container->resolve('IConcreteService');
+
+    $this->assertEquals($numberOne->getRandomNumber(), $numberTwo->getRandomNumber());
+    $this->assertInternalType('int', $numberOne->getRandomNumber());
+    $this->assertInternalType('int', $numberTwo->getRandomNumber());
+  }
 
 }
 
@@ -72,6 +84,17 @@ interface IConcreteService
 
 class ConcreteService implements IConcreteService
 {
+  private $_randomNumber;
+
+  public function __construct()
+  {
+    $this->_randomNumber = rand();
+  }
+
+  public function getRandomNumber()
+  {
+    return $this->_randomNumber;
+  }
 }
 
 class AnotherConcreteService
