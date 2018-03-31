@@ -41,12 +41,7 @@ class AutoContainer
     $this->validateInterface($interface);
     $this->validadeConcreteType($concreteType, $interface);
 
-    $reflectionClass = new \ReflectionClass($concreteType);
-    $instance = $reflectionClass->newInstance();
-
-    // $this->pre($instance);
-
-    $this->_container[$interface] = $instance;
+    $this->_container[$interface] = $concreteType;
   }
 
   /**
@@ -58,10 +53,42 @@ class AutoContainer
   public function resolve($serviceName)
   {
     try {
-      return $this->_container[$serviceName];
+      $registeredService = $this->_container[$serviceName];
+      if ($this->isAnInstance($registeredService)) {
+        return $registeredService;
+      }
+
+      $dependencies = $this->getDependencies($registeredService);
+      $reflectionClass = new \ReflectionClass($registeredService);
+      $instance = $reflectionClass->newInstanceArgs($dependencies);
+
+      $this->register($serviceName, $instance);
+      return $instance;
     } catch (\Exception $e) {
       throw new UnregisteredServiceException();
     }
+  }
+
+  /**
+   * It get all resolved dependencies from the requisited service
+   *
+   * @param $service string
+   * @return array
+   */
+  private function getDependencies($service) : array
+  {
+    $reflectionClass = new \ReflectionClass($service);
+    $constructor = $reflectionClass->getConstructor();
+    $parameters = $constructor->getParameters();
+    $dependencies = array_map(
+        function ($param) {
+          $service = $param->getClass()->name;
+          return $this->resolve($service);
+        },
+        $parameters
+    );
+
+    return $dependencies;
   }
 
   /**
@@ -116,6 +143,10 @@ class AutoContainer
    */
   private function itsAConcreteType($concreteType) : bool
   {
+    if ($this->isAnInstance($concreteType)) {
+      return true;
+    }
+
     return class_exists($concreteType);
   }
 
@@ -139,6 +170,15 @@ class AutoContainer
     }
 
     return true;
+  }
+
+  /**
+   * Verify if it already is an object
+   */
+  private function isAnInstance($service)
+  {
+    $result = \is_object($service);
+    return $result;
   }
 
   /**
